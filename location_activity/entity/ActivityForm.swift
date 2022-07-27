@@ -13,12 +13,14 @@ struct ActivityForm {
     var date: String?
     var confident: String?
     var speed: Double?
+    var location: String?
     
-    init(activity: String?, date: String?, confident: String, speed: Double) {
+    init(activity: String?, date: String?, confident: String, speed: Double, location: String) {
         self.activity = activity
         self.date = date
         self.confident = confident
         self.speed = speed
+        self.location = location
     }
     
     init() {

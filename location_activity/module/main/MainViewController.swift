@@ -22,16 +22,32 @@ class MainViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     
     var activityFecthData = [ActivityForm]()
+    var font = UIFont.systemFont(ofSize: 17)
     var activityData: String?
     var dateData: String?
     var confidentData: String?
     var speedData: Double?
+    var locationData: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.presenter?.notifyViewDidLoad()
         self.initUI()
         self.prepareInsertHistoryActivity()
+    }
+    
+    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        let isLandscape = UIDevice.current.orientation.isLandscape
+
+        if isLandscape {
+            DispatchQueue.main.async{
+                self.collectionView.reloadData()
+            }
+        } else {
+            DispatchQueue.main.async{
+                self.collectionView.reloadData()
+            }
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -54,11 +70,13 @@ class MainViewController: UIViewController {
         if let activity = self.activityData,
            let date = self.dateData,
            let confident =  self.confidentData,
-           let speed = self.speedData {
+           let speed = self.speedData,
+           let location = self.locationData {
                 let activityForm = ActivityForm(activity: activity,
                                                 date: date,
                                                 confident: confident,
-                                                speed: speed)
+                                                speed: speed,
+                                                location: location)
                 
                 self.presenter?.notifyInsertHistoryActivity(activity: activityForm)
             }
@@ -71,8 +89,8 @@ extension MainViewController:  MainViewProtocol {
     
     //MARK: location not show and save
     func displayLocationView(location: Location) {
-        print("location = \(location)")
-        self.locationLabel.text = location.geocoder
+        self.locationLabel.text = "ตำเเหน่งปัจจุบัน\n" + location.geocoder
+        self.locationData = location.geocoder
     }
     
     func displayGpsSpeed(speed: Double) {
@@ -162,7 +180,9 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize.init(width: collectionView.frame.width, height: 150)
+        
+        let sizeMessage: CGFloat = DynamicTextFieldSize.height(text: self.locationData, font: self.font, width: collectionView.frame.width)
+        return CGSize.init(width: collectionView.frame.width, height: 180 + sizeMessage)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {

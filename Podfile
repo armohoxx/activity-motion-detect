@@ -4,13 +4,6 @@ platform :ios, '12.0'
   def core
     use_frameworks!
     inhibit_all_warnings!
-    
-  end
-
-  def uikits
-    use_frameworks!
-    inhibit_all_warnings!
-    pod 'ModelMapper'
     pod 'Alamofire'
     pod 'SQLite.swift', '~> 0.11.5'
     pod 'FMDB'
@@ -20,7 +13,15 @@ platform :ios, '12.0'
     pod 'Firebase/RemoteConfig'
     pod 'Kingfisher'
     pod 'Moya'
-    
+    pod 'ModelMapper'
+    pod 'XCGLogger', '~> 7.0.1'
+  end
+
+  def uikits
+    use_frameworks!
+    inhibit_all_warnings!
+    pod 'MBProgressHUD'
+    pod 'Localize-Swift', '~> 2.0'
   end
 
 target 'location_activity' do

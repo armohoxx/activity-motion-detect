@@ -15,6 +15,7 @@ class DBActivityHelper {
     static let date = Expression<String?>("date")
     static let confident = Expression<String?>("confident")
     static let speed = Expression<String?>("speed")
+    static let location = Expression<String?>("location")
     
     var activityData = [ActivityForm]()
     
@@ -31,6 +32,7 @@ class DBActivityHelper {
                 historyActivityTable.column(date)
                 historyActivityTable.column(confident)
                 historyActivityTable.column(speed)
+                historyActivityTable.column(location)
             })
         } catch {
             print("historyActivityTable already exists: \(error)")
@@ -49,7 +51,8 @@ class DBActivityHelper {
             if let activityRow = historyActivity.activity,
                let dateRow = historyActivity.date,
                let confidentRow = historyActivity.confident,
-               let speedRow = historyActivity.speed {
+               let speedRow = historyActivity.speed,
+               let locationRow = historyActivity.location {
                 
                 for data in try database.prepare("select count(*) from historyActivity") {
                     if let dataCountRow: Int64 = Optional(data[0]) as? Int64 {
@@ -62,14 +65,16 @@ class DBActivityHelper {
                                 try database.run(historyActivityTable.insert(activity <- activityRow,
                                                                              date <- dateRow,
                                                                              confident <- confidentRow,
-                                                                             speed <- String(speedRow)))
+                                                                             speed <- String(speedRow),
+                                                                             location <- locationRow))
                             }
                         } else {
                             print("data = \(String(describing: countRow))")
                             try database.run(historyActivityTable.insert(activity <- activityRow,
                                                                          date <- dateRow,
                                                                          confident <- confidentRow,
-                                                                         speed <- String(speedRow)))
+                                                                         speed <- String(speedRow),
+                                                                         location <- locationRow))
                             
                             print("insert history activity")
                         }
@@ -78,7 +83,8 @@ class DBActivityHelper {
                         try database.run(historyActivityTable.insert(activity <- activityRow,
                                                                      date <- dateRow,
                                                                      confident <- confidentRow,
-                                                                     speed <- String(speedRow)))
+                                                                     speed <- String(speedRow),
+                                                                     location <- locationRow))
                         
                         print("insert history activity")
                     }
@@ -99,6 +105,7 @@ class DBActivityHelper {
         var activityDate: String?
         var activityConfident: String?
         var activitySpeed: Double?
+        var activityLocation: String?
         
         guard let database = DBActivity.sharedInstance.database else {
             print("Database connection error")
@@ -137,16 +144,23 @@ class DBActivityHelper {
                 } else {
                     activitySpeed = nil
                 }
+                
+                if let dataLocation: String = Optional(data[5]) as? String {
+                    activityLocation = dataLocation
+                } else {
+                    activityLocation = nil
+                }
 
                 let activity = ActivityForm(activity: activityName,
                                             date: activityDate,
                                             confident: activityConfident ?? "",
-                                            speed: activitySpeed ?? 0.0)
+                                            speed: activitySpeed ?? 0.0,
+                                            location: activityLocation ?? "")
 
                 self.activityData.append(activity)
             }
         } catch {
-           print("electActivityData error")
+           print("selectActivityData error")
         }
         
         return self.activityData

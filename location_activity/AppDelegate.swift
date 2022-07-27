@@ -6,9 +6,13 @@
 //
 
 import UIKit
+import CoreLocation
+import Firebase
+import FirebaseMessaging
+import XCGLogger
 
 @main
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate {
 
     var window: UIWindow?
 
@@ -17,7 +21,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window?.rootViewController = assignViewController()
         self.window?.makeKeyAndVisible()
         self.createTableHistory()
-        LocationHelper.shared().update()
+        OldLocationHelper.shared().update()
+        
+        //MARK: remote config error no google service file
+        //FirebaseApp.configure()
         
         if #available(iOS 13.0, *) {
             self.customizeNavigationBar()
@@ -45,6 +52,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().scrollEdgeAppearance = UINavigationBar.appearance().standardAppearance
         UINavigationBar.appearance().isTranslucent = true
         appearance.backgroundColor = .white
+    }
+    
+    func applicationWillResignActive(_ application: UIApplication) {
+        // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
+        // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
+    }
+
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
+        // If your applicati on supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        LocationUpdater.shared.startUpdater()
+        ActivityMotion.shared.startActivityUpdates()
+        //UNUserNotificationCenter.current().delegate = self
+    }
+
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+    }
+
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        LocationUpdater.shared.startUpdater()
+        ActivityMotion.shared.startActivityUpdates()
+        //UNUserNotificationCenter.current().delegate = self
+        
+        //UserSession.shared.syncPairedWristband(doneCallback: nil)
+        RemoteConfigHelper.shared.fetchRemoteSponsorImage()
+        //self.checkMinimumRequiredPermission()
+        //self.checkVerifyQuarantineUsingWristband()
+        //self.checkTimeViedoCall()
     }
 
     // MARK: UISceneSession Lifecycle

@@ -13,9 +13,15 @@ class MainCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var confidentLabel: UILabel!
     @IBOutlet weak var speedLabel: UILabel!
+    @IBOutlet weak var locationLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        self.initUI()
+    }
+    
+    func initUI() {
+        self.locationLabel.sizeToFit()
     }
     
     func displayHistoryActivity(activity: ActivityForm) {
@@ -23,6 +29,7 @@ class MainCollectionViewCell: UICollectionViewCell {
         self.dateLabel.text = "วันที่เริ่ม : " + "\(String(describing: activity.date ?? "-"))"
         self.confidentLabel.text = "ความเเม่นยำ : " + "\(String(describing: activity.confident ?? "-"))"
         self.speedLabel.text = String(format: "ความเร็ว : %.1f", activity.speed ?? 0.0) + " Km/h"
+        self.locationLabel.text = "ตำเเหน่ง : \(String(describing: activity.location ?? ""))"
     }
 
 }

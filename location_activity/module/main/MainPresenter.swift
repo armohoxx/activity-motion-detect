@@ -28,9 +28,8 @@ class MainPresenter {
 extension MainPresenter: MainPresenterProtocol {
     
     func notifyViewDidLoad() {
-        self.interactor?.getLocation()
+        self.interactor?.addLocationObserver()
         self.interactor?.fetchLocation()
-        self.interactor?.getMotionActivity()
         self.interactor?.fetchHistoryActivity()
     }
     

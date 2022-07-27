@@ -10,10 +10,10 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="MainCollectionViewCell" customModule="location_activity" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="300" height="150"/>
+            <rect key="frame" x="0.0" y="0.0" width="300" height="180"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="300" height="150"/>
+                <rect key="frame" x="0.0" y="0.0" width="300" height="180"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7si-D2-JdD">
@@ -52,31 +52,41 @@
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ec5-id-aRp">
+                        <rect key="frame" x="20" y="150" width="260" height="20"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
             </view>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="7si-D2-JdD" secondAttribute="trailing" constant="20" id="1ME-Jq-KEM"/>
                 <constraint firstAttribute="trailing" secondItem="I7N-YB-CDT" secondAttribute="trailing" constant="20" id="1dh-c2-of0"/>
+                <constraint firstItem="Ec5-id-aRp" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="20" id="54m-CC-k6g"/>
+                <constraint firstItem="Ec5-id-aRp" firstAttribute="top" secondItem="I7N-YB-CDT" secondAttribute="bottom" constant="10" id="5GB-iP-wOf"/>
                 <constraint firstItem="KWX-YV-vEF" firstAttribute="top" secondItem="7si-D2-JdD" secondAttribute="bottom" constant="10" id="6N8-U8-SHE"/>
                 <constraint firstItem="awq-W4-mJq" firstAttribute="top" secondItem="KWX-YV-vEF" secondAttribute="bottom" constant="10" id="F6P-um-hib"/>
+                <constraint firstAttribute="bottom" secondItem="Ec5-id-aRp" secondAttribute="bottom" constant="10" id="FUi-FD-IhI"/>
                 <constraint firstItem="7si-D2-JdD" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="10" id="HUH-Uk-sQY"/>
                 <constraint firstItem="awq-W4-mJq" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="20" id="Xsr-ib-OS2"/>
-                <constraint firstAttribute="bottom" secondItem="I7N-YB-CDT" secondAttribute="bottom" constant="10" id="aBc-WI-xoa"/>
                 <constraint firstAttribute="trailing" secondItem="KWX-YV-vEF" secondAttribute="trailing" constant="20" id="elb-Tr-XMM"/>
                 <constraint firstItem="I7N-YB-CDT" firstAttribute="top" secondItem="awq-W4-mJq" secondAttribute="bottom" constant="10" id="gD6-pD-dCE"/>
                 <constraint firstAttribute="trailing" secondItem="awq-W4-mJq" secondAttribute="trailing" constant="20" id="laF-Rg-WY0"/>
                 <constraint firstItem="7si-D2-JdD" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="20" id="mmU-xm-BUJ"/>
                 <constraint firstItem="I7N-YB-CDT" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="20" id="pq7-Al-ArI"/>
                 <constraint firstItem="KWX-YV-vEF" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="20" id="snP-QD-VNl"/>
+                <constraint firstAttribute="trailing" secondItem="Ec5-id-aRp" secondAttribute="trailing" constant="20" id="wzi-ah-d8S"/>
             </constraints>
-            <size key="customSize" width="300" height="150"/>
+            <size key="customSize" width="300" height="180"/>
             <connections>
                 <outlet property="ativityLabel" destination="7si-D2-JdD" id="si4-nS-M9n"/>
                 <outlet property="confidentLabel" destination="awq-W4-mJq" id="mT9-mB-aSI"/>
                 <outlet property="dateLabel" destination="KWX-YV-vEF" id="Nf7-ON-fMK"/>
+                <outlet property="locationLabel" destination="Ec5-id-aRp" id="66O-fa-6nV"/>
                 <outlet property="speedLabel" destination="I7N-YB-CDT" id="la1-hF-XYA"/>
             </connections>
-            <point key="canvasLocation" x="311.59420289855075" y="106.47321428571428"/>
+            <point key="canvasLocation" x="311.59420289855075" y="116.51785714285714"/>
         </collectionViewCell>
     </objects>
 </document>

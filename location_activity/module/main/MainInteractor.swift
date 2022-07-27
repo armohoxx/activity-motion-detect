@@ -22,6 +22,34 @@ class MainInteractor: CLLocationManager, CLLocationManagerDelegate {
 
 extension MainInteractor: MainInteractorProtocol {
     
+    func addLocationObserver() {
+        NotificationCenter.default.addObserver(self, selector: #selector(onLocationNotificationUpdated(notification:)), name: .LocationHelperDidUpdatedSelectedLocation, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onLocationNotificationError(notification:)), name: .LocationHelperDidError, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onActivityMotionNotificationUpdated(notification:)), name: .ActivityMotionHelper, object: nil)
+    }
+    
+    @objc func onLocationNotificationUpdated(notification: Notification) {
+        if let location = notification.object as? Location {
+            self.presenter?.notifyLocationFetched(location: location)
+            //self.fetchLocationAuthorizationUpdated()
+        }
+    }
+    
+    @objc func onActivityMotionNotificationUpdated(notification: Notification) {
+        if let motion = notification.object as? CMMotionActivity {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+            let date = dateFormatter.string(from: motion.startDate)
+            self.presenter?.notifyDisplayMotionData(motion: motion, date: date)
+        }
+    }
+    
+    @objc func onLocationNotificationError(notification: Notification) {
+        if let err = notification.object as? Error {
+            print("Location error = \(err)")
+        }
+    }
+    
     func fetchHistoryActivity() {
         let activity = DBActivityHelper().selectActivityData()
         self.presenter?.notifyFetchHistoryActivity(activity: activity)
@@ -29,9 +57,9 @@ extension MainInteractor: MainInteractorProtocol {
     
     func fetchLocation() {
         if Reachability.isConnectedToNetwork() {
-            LocationHelper.shared().update()
+            OldLocationHelper.shared().update()
         } else {
-            if let location =  LocationHelper.shared().location {
+            if let location =  OldLocationHelper.shared().location {
                self.presenter?.notifyLocationFetched(location: location)
             } else {
                 print("The Internet connection appears to be offline.")
@@ -43,57 +71,16 @@ extension MainInteractor: MainInteractorProtocol {
         DBActivityHelper.insertActivity(historyActivity: activity)
     }
     
-    func getLocation() {
-        if CLLocationManager.locationServicesEnabled() {
-            locationManager.delegate = self
-            locationManager.requestAlwaysAuthorization()
-            locationManager.desiredAccuracy = kCLLocationAccuracyBest
-            locationManager.startUpdatingLocation()
-        }
-    }
-    
-    func getMotionActivity() {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
-        
-        if CMMotionActivityManager.isActivityAvailable() {
-            motionActivityManager.startActivityUpdates(to: OperationQueue.main) { (motion) in
-                let date = dateFormatter.string(from: (motion?.startDate)!)
-                self.presenter?.notifyDisplayMotionData(motion: motion, date: date)
-            }
-            
-            let calendar = Calendar.current
-            motionActivityManager.queryActivityStarting(from: calendar.startOfDay(for: Date()),
-                                                        to: Date(),
-                                                        to: OperationQueue.main) { (motionActivities, error) in
-                                                            for motionActivity in motionActivities! {
-                                                                if motionActivity.automotive {
-                                                                    print(motionActivity)
-                                                                }
-                                                            }
-            }
-            
-        }
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let location = locations.last! as CLLocation
-        let speed: Double = 3.6 * location.speed
-        
-        print("speed = \(speed)")
-        
-        if speed < 0 {
-            self.presenter?.notifyDisplayGPSSpeed(speed: 0)
-        } else {
-            self.presenter?.notifyDisplayGPSSpeed(speed: speed)
-        }
-    }
-
-    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager, status: CLAuthorizationStatus) {
-        if(status == CLAuthorizationStatus.denied) {
-            self.presenter?.notifyDisabledLocationPopUp()
-        } else {
-            locationManager.startUpdatingLocation()
-        }
-    }
+//    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+//        let location = locations.last! as CLLocation
+//        let speed: Double = 3.6 * location.speed
+//
+//        print("speed = \(speed)")
+//
+//        if speed < 0 {
+//            self.presenter?.notifyDisplayGPSSpeed(speed: 0)
+//        } else {
+//            self.presenter?.notifyDisplayGPSSpeed(speed: speed)
+//        }
+//    }
 }

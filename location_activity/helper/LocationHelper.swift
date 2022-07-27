@@ -2,26 +2,28 @@
 //  LocationHelper.swift
 //  location_activity
 //
-//  Created by phattarapon on 25/7/2565 BE.
+//  Created by phattarapon on 26/7/2565 BE.
 //
 
 import MapKit
+import UIKit
 import Foundation
 
 protocol LocationHelperDelegate {
-    func onLocationUpdated(location: Location)
+    func onLocationUpdated(location: CLLocation)
     func onLocationUpdateFailed(error: Error)
 }
 
 extension NSNotification.Name {
-    static let LocationHelperDidUpdatedSelectedLocation =  NSNotification.Name("ttrs.location.source.selected")
-    static let LocationHelperDidUpdatedGPSLocation =  NSNotification.Name("ttrs.location.source.gps")
-    static let LocationHelperDidError =  NSNotification.Name("ttrs.location.updated.error")
-    static let LocationHelperShareLocation =  NSNotification.Name("ttrs.location.source.shareLocation")
+    static let LocationHelperDidUpdatedSelectedLocation =  NSNotification.Name("location.source.selected")
+    static let LocationHelperDidUpdatedGPSLocation =  NSNotification.Name("th.or.nstda.aat.vwatch.location.updated")
+    static let LocationHelperDidError =  NSNotification.Name("th.or.nstda.aat.vwatch.location.updated.updated.error")
+    static let LocationHelperShareLocation =  NSNotification.Name("th.or.nstda.aat.vwatch.location.updated.location.source.shareLocation")
 }
 
-class LocationHelper : NSObject {
+class LocationHelper : NSObject{
     
+    public var updateCompletion: ((CLLocation?) -> Void)?
     public var delegate: LocationHelperDelegate?
     
     /*
@@ -31,50 +33,19 @@ class LocationHelper : NSObject {
      *      Get the selected location from helper
      *      Set the user's selected location as its location
      */
-    private var useAlwayUpdating:Bool?
-    public var location: Location?
-    public var locationSelected: Location? {
-        didSet {
-            if Reachability.isConnectedToNetwork() {
-                if let location = self.locationSelected {
-                       self.geoUpdate(location: location) { (location) in
-                            self.location = location
-                            self.stopUpdateLocation()
-                    }
-                }
-            }else {
-                if let location = self.locationSelected {
-                    self.locationUpdate(location: location){ (location) in
-                            self.location = location
-                    }
-                }
-            }
-        }
-    }
-    
-    /*
-     * gpsLocation
-     *
-     * Description:
-     *      Get detected current location that updating from GPS
-     */
-    private(set) var gpsLocation: Location?
+    public var location: CLLocation?
     
     private var locm: CLLocationManager?
     private var geocoder: CLGeocoder?
     
-    private static var instance: LocationHelper = {
+    public static var shared: LocationHelper = {
         let instance = LocationHelper()
         instance.locm = CLLocationManager()
+        instance.locm?.allowsBackgroundLocationUpdates = true
+        instance.locm?.desiredAccuracy = 200
         instance.geocoder = CLGeocoder()
         return instance
     }()
-    
-    //MARK: Shared
-    
-    public static func shared() -> LocationHelper{
-        return instance
-    }
     
     //MARK: Functions
     
@@ -100,14 +71,31 @@ class LocationHelper : NSObject {
         self.locm?.startUpdatingLocation()
     }
     
-    //MARK: Updater
-    
-    private func geoUpdate(location: Location, completionHandler: ((Location) -> Void)?) {
-        self.geoUpdate(location: CLLocation.init(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude), completionHandler: completionHandler)
+    public func update(completion: ((CLLocation?) -> Void)?) {
+        self.updateCompletion = completion
+        self.update()
+    }
+
+    func stopUpdateLocation() {
+        self.locm?.stopUpdatingLocation()
     }
     
-    private func geoUpdate(location: CLLocation, completionHandler: ((Location) -> Void)?) {
-        self.geocoder?.reverseGeocodeLocation(location, completionHandler: { (places, err) in
+    //MARK: Updater
+    
+    public func geoUpdate(completionHandler: ((String) -> Void)?) {
+        self.geoUpdate(locale: Locale.current, completionHandler: completionHandler)
+    }
+  
+    public func geoUpdate(locale: Locale, completionHandler: ((String) -> Void)?) {
+        //let defaultStreetName = "unnamed_street".localized()
+        let defaultStreetName = "unnamed_street"
+        guard let location = self.location else {
+            if let block = completionHandler {
+                block(defaultStreetName)
+            }
+            return;
+        }
+        self.geocoder?.reverseGeocodeLocation(location, preferredLocale: locale, completionHandler: { (places, err) in
             guard err == nil else {
                 if let delegate = self.delegate {
                     delegate.onLocationUpdateFailed(error: err!)
@@ -120,6 +108,9 @@ class LocationHelper : NSObject {
                 places.count > 0 {
                 var named = ""
                 let place = places.first
+                if let name = place?.name {
+                    named = named + "\(name), "
+                }
                 if let thoroughfare = place?.thoroughfare {
                     named = named + "\(thoroughfare), "
                 }
@@ -129,75 +120,36 @@ class LocationHelper : NSObject {
                 if let administrativeArea = place?.administrativeArea {
                     named = named + "\(administrativeArea), "
                 }
+                if let zipcode = place?.postalCode {
+                    named = named + "\(zipcode), "
+                }
                 
                 if named == "" {
-                    named = NSLocalizedString("Unnamed street", comment: "")
+                    named = defaultStreetName
                 }
                 
-                let loc = Location.init(name: named, location: location, grocoder: named)
-                if let delegate = self.delegate {
-                    delegate.onLocationUpdated(location: loc)
-                }
-                
-                NotificationCenter.default.post(name: .LocationHelperDidUpdatedSelectedLocation, object: loc)
                 if let block = completionHandler {
-                    block(loc)
+                    block(named)
                 }
             }
             
         })
     }
 
-    func stopUpdateLocation() {
-        self.useAlwayUpdating = false
-        self.locm?.stopUpdatingLocation()
-    }
-    
-    private func locationUpdate(location: Location, completionHandler: ((Location) -> Void)?) {
-        var loc = location
-        if location.name.isEmpty {
-           let coordinate = CLLocation(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
-           let grocoder =  "\(location.coordinate.latitude) , \(location.coordinate.longitude)"
-           loc = Location(name: "", location: coordinate , grocoder: grocoder)
-          
-        }
-        self.location = loc
-        NotificationCenter.default.post(name: .LocationHelperDidUpdatedSelectedLocation, object: loc)
-    }
-    
-    func isAllowPermissionLocation() -> Bool {
-        if CLLocationManager.locationServicesEnabled() {
-            switch CLLocationManager.authorizationStatus() {
-                case .notDetermined, .restricted, .denied:
-                    print("No access")
-                case .authorizedAlways, .authorizedWhenInUse:
-                    print("Access")
-                    return true
-                @unknown default:
-                break
-            }
-        } else {
-            print("Location services are not enabled")
-        }
-        return false
-    }
 }
 
 extension LocationHelper : CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        self.locm?.stopUpdatingLocation()
-         if self.useAlwayUpdating != false {
-            if locations.count > 0 {
-                let loc = locations.first
-                self.geoUpdate(location: loc!) { (location) in
-                    self.gpsLocation = location
-                    if self.location == nil {
-                        self.location = location
-                    }
-                    
-                }
+        
+        if locations.count > 0 {
+            let loc = locations.first
+            
+            NotificationCenter.default.post(name: .LocationHelperDidUpdatedGPSLocation, object: loc)
+            if let completion = self.updateCompletion {
+                completion(loc)
             }
+            self.location = loc
         }
     }
     
@@ -221,4 +173,3 @@ extension LocationHelper : CLLocationManagerDelegate {
     }
     
 }
-

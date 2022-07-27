@@ -31,8 +31,7 @@ protocol MainPresenterProtocol: class {
 //MARK: Interactor -
 protocol MainInteractorProtocol: class {
     var presenter: MainPresenterProtocol?  { get set }
-    func getLocation()
-    func getMotionActivity()
+    func addLocationObserver()
     func fetchHistoryActivity()
     func fetchLocation()
     func insertHistoryActivity(activity: ActivityForm)
