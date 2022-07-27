@@ -15,7 +15,8 @@ protocol LocationHelperDelegate {
 }
 
 extension NSNotification.Name {
-    static let LocationHelperDidUpdatedSelectedLocation =  NSNotification.Name("location.source.selected")
+    //static let LocationHelperDidUpdatedSelectedLocation =  NSNotification.Name("location.source.selected")
+    static let LocationSpeedHelperDidUpdatedSelectedLocation =  NSNotification.Name("location.source.selected.speed")
     static let LocationHelperDidUpdatedGPSLocation =  NSNotification.Name("th.or.nstda.aat.vwatch.location.updated")
     static let LocationHelperDidError =  NSNotification.Name("th.or.nstda.aat.vwatch.location.updated.updated.error")
     static let LocationHelperShareLocation =  NSNotification.Name("th.or.nstda.aat.vwatch.location.updated.location.source.shareLocation")
@@ -49,7 +50,7 @@ class LocationHelper : NSObject{
     
     //MARK: Functions
     
-    public func update(){
+    public func update() {
         self.locm?.delegate = self
         switch CLLocationManager.authorizationStatus() {
         case .notDetermined:
@@ -128,6 +129,14 @@ class LocationHelper : NSObject{
                     named = defaultStreetName
                 }
                 
+//                let loc = Location.init(name: named, location: location, grocoder: named)
+//
+//                if let delegate = self.delegate {
+//                    delegate.onLocationUpdated(location: loc)
+//                }
+//
+//                NotificationCenter.default.post(name: .LocationHelperDidUpdatedSelectedLocation, object: loc)
+                
                 if let block = completionHandler {
                     block(named)
                 }
@@ -144,10 +153,18 @@ extension LocationHelper : CLLocationManagerDelegate {
         
         if locations.count > 0 {
             let loc = locations.first
+            let location = locations.last! as CLLocation
+            let speed: Double = 3.6 * location.speed
             
             NotificationCenter.default.post(name: .LocationHelperDidUpdatedGPSLocation, object: loc)
             if let completion = self.updateCompletion {
                 completion(loc)
+            }
+            
+            if speed < 0 {
+                NotificationCenter.default.post(name: .LocationSpeedHelperDidUpdatedSelectedLocation, object: 0)
+            } else {
+                NotificationCenter.default.post(name: .LocationSpeedHelperDidUpdatedSelectedLocation, object: speed)
             }
             self.location = loc
         }

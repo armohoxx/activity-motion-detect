@@ -36,6 +36,11 @@ class MainViewController: UIViewController {
         self.prepareInsertHistoryActivity()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.presenter?.notifyLocationFetched()
+    }
+    
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         let isLandscape = UIDevice.current.orientation.isLandscape
 
@@ -48,11 +53,6 @@ class MainViewController: UIViewController {
                 self.collectionView.reloadData()
             }
         }
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        self.presenter?.notifyViewDidAppear()
     }
     
     func initUI() {
@@ -88,9 +88,10 @@ class MainViewController: UIViewController {
 extension MainViewController:  MainViewProtocol {
     
     //MARK: location not show and save
-    func displayLocationView(location: Location) {
-        self.locationLabel.text = "ตำเเหน่งปัจจุบัน\n" + location.geocoder
-        self.locationData = location.geocoder
+    func displayLocationView(location: String) {
+        print("isShowLocationData")
+        self.locationLabel.text = "ตำเเหน่งปัจจุบัน\n" + location
+        self.locationData = location
     }
     
     func displayGpsSpeed(speed: Double) {

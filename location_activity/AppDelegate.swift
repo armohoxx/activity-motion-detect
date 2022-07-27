@@ -21,7 +21,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         self.window?.rootViewController = assignViewController()
         self.window?.makeKeyAndVisible()
         self.createTableHistory()
-        OldLocationHelper.shared().update()
         
         //MARK: remote config error no google service file
         //FirebaseApp.configure()

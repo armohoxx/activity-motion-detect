@@ -23,15 +23,22 @@ class MainInteractor: CLLocationManager, CLLocationManagerDelegate {
 extension MainInteractor: MainInteractorProtocol {
     
     func addLocationObserver() {
-        NotificationCenter.default.addObserver(self, selector: #selector(onLocationNotificationUpdated(notification:)), name: .LocationHelperDidUpdatedSelectedLocation, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(onLocationNotificationUpdated(notification:)), name: .LocationHelperDidUpdatedSelectedLocation, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(onLocationNotificationError(notification:)), name: .LocationHelperDidError, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(onActivityMotionNotificationUpdated(notification:)), name: .ActivityMotionHelper, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onSpeedLocationNotificationUpdated(notification:)), name: .LocationSpeedHelperDidUpdatedSelectedLocation, object: nil)
     }
     
-    @objc func onLocationNotificationUpdated(notification: Notification) {
-        if let location = notification.object as? Location {
-            self.presenter?.notifyLocationFetched(location: location)
-            //self.fetchLocationAuthorizationUpdated()
+//    @objc func onLocationNotificationUpdated(notification: Notification) {
+//        if let location = notification.object as? Location {
+//            self.presenter?.notifyLocationFetched(location: location)
+//            //self.fetchLocationAuthorizationUpdated()
+//        }
+//    }
+    
+    @objc func onLocationNotificationError(notification: Notification) {
+        if let err = notification.object as? Error {
+            print("Location error = \(err)")
         }
     }
     
@@ -44,43 +51,18 @@ extension MainInteractor: MainInteractorProtocol {
         }
     }
     
-    @objc func onLocationNotificationError(notification: Notification) {
-        if let err = notification.object as? Error {
-            print("Location error = \(err)")
+    @objc func onSpeedLocationNotificationUpdated(notification: Notification) {
+        if let speed = notification.object as? Double {
+            self.presenter?.notifyDisplayGPSSpeed(speed: speed)
         }
     }
-    
+
     func fetchHistoryActivity() {
         let activity = DBActivityHelper().selectActivityData()
         self.presenter?.notifyFetchHistoryActivity(activity: activity)
     }
     
-    func fetchLocation() {
-        if Reachability.isConnectedToNetwork() {
-            OldLocationHelper.shared().update()
-        } else {
-            if let location =  OldLocationHelper.shared().location {
-               self.presenter?.notifyLocationFetched(location: location)
-            } else {
-                print("The Internet connection appears to be offline.")
-            }
-        }
-    }
-    
     func insertHistoryActivity(activity: ActivityForm) {
         DBActivityHelper.insertActivity(historyActivity: activity)
     }
-    
-//    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-//        let location = locations.last! as CLLocation
-//        let speed: Double = 3.6 * location.speed
-//
-//        print("speed = \(speed)")
-//
-//        if speed < 0 {
-//            self.presenter?.notifyDisplayGPSSpeed(speed: 0)
-//        } else {
-//            self.presenter?.notifyDisplayGPSSpeed(speed: speed)
-//        }
-//    }
 }

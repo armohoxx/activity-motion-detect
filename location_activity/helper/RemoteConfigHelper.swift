@@ -54,6 +54,7 @@ class RemoteConfigHelper: NSObject {
     var defaultOrgList = Constants.DefaultOrgListRev
     var defaultRadiuses = Constants.DefaultRadiusAreaPlace
     var defaultTrackingMinVehicleInterval = Constants.DefaultTrackingMinVehicleInterval
+    var defaultTrackingMinCyclingInterval = Constants.DefaultTrackingMinCyclingInterval
     var defaultTrackingMinRunningInterval = Constants.DefaultTrackingMinRunningInterval
     var defaultTrackingMinWalkingInterval = Constants.DefaultTrackingMinWalkingInterval
     var defaultTrackingMinInterval = Constants.DefaultTrackingMinInterval

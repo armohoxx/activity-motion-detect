@@ -43,7 +43,6 @@
 		36723AAD288AB3CA00DAC011 /* ActivityForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36723AAC288AB3CA00DAC011 /* ActivityForm.swift */; };
 		36EF68CD288E83B10070DF8C /* MainHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36EF68CB288E83B10070DF8C /* MainHeader.swift */; };
 		36EF68CE288E83B10070DF8C /* MainHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 36EF68CC288E83B10070DF8C /* MainHeader.xib */; };
-		36EF68D0288E95820070DF8C /* OldLocationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36EF68CF288E95820070DF8C /* OldLocationHelper.swift */; };
 		36EF68D2288E95D20070DF8C /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36EF68D1288E95D20070DF8C /* Location.swift */; };
 		36EF68D4288E96390070DF8C /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36EF68D3288E96390070DF8C /* Reachability.swift */; };
 		64651A4D6418FD36ACF2ADDE /* Pods_location_activity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE243F7D8317370A855C65CD /* Pods_location_activity.framework */; };
@@ -88,7 +87,6 @@
 		36723AAC288AB3CA00DAC011 /* ActivityForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityForm.swift; sourceTree = "<group>"; };
 		36EF68CB288E83B10070DF8C /* MainHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHeader.swift; sourceTree = "<group>"; };
 		36EF68CC288E83B10070DF8C /* MainHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainHeader.xib; sourceTree = "<group>"; };
-		36EF68CF288E95820070DF8C /* OldLocationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OldLocationHelper.swift; sourceTree = "<group>"; };
 		36EF68D1288E95D20070DF8C /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		36EF68D3288E96390070DF8C /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		40D78F86E936F544F333B9F9 /* Pods-location_activity.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-location_activity.release.xcconfig"; path = "Target Support Files/Pods-location_activity/Pods-location_activity.release.xcconfig"; sourceTree = "<group>"; };
@@ -131,7 +129,6 @@
 				362894D5288FE069009B16F5 /* ActivityMotion.swift */,
 				362894E2288FE3C5009B16F5 /* RemoteConfigHelper.swift */,
 				36723AAA288AB16500DAC011 /* DBActivityHelper.swift */,
-				36EF68CF288E95820070DF8C /* OldLocationHelper.swift */,
 				362894E8288FE640009B16F5 /* LocationHelper.swift */,
 				362894E6288FE4A6009B16F5 /* LocationUpdater.swift */,
 				362894D8288FE0B1009B16F5 /* LoggerHelper.swift */,
@@ -398,7 +395,6 @@
 				3660807B2889129C008D818F /* SceneDelegate.swift in Sources */,
 				366080952889133E008D818F /* MainPresenter.swift in Sources */,
 				36267D17288AAA6E0069F9C7 /* DBActivity.swift in Sources */,
-				36EF68D0288E95820070DF8C /* OldLocationHelper.swift in Sources */,
 				36EF68D4288E96390070DF8C /* Reachability.swift in Sources */,
 				362894E3288FE3C5009B16F5 /* RemoteConfigHelper.swift in Sources */,
 				362894E9288FE640009B16F5 /* LocationHelper.swift in Sources */,

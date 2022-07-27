@@ -47,6 +47,7 @@ struct Constants {
     ]
     static var DefaultRadiusAreaPlace: [Double] = [50,500]
     static var DefaultTrackingMinVehicleInterval:Int = 4
+    static var DefaultTrackingMinCyclingInterval:Int = 6
     static var DefaultTrackingMinRunningInterval:Int = 6
     static var DefaultTrackingMinWalkingInterval:Int = 8
     static var DefaultTrackingMinInterval:Int = 10

@@ -54,6 +54,7 @@ class LocationUpdater: NSObject {
             let diff = calender.dateComponents([.hour, .minute, .second], from: self.lastUpdated, to: Date())
             if let min = diff.minute {
                 self.updateMinuteThreshold = UserSession.shared.getTrackingMinInterval()
+                //MARK: push activity (กิจกรรมดำเนินอยู่เเล้วหยุดนิ่งจะทำไงดี?)
                 if (min >= self.updateMinuteThreshold) {
                     Logger.shared.debug("postTrackedLocation min : \(self.updateMinuteThreshold)")
                     self.postTrackedLocation(lastLocation)

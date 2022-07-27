@@ -35,13 +35,16 @@ class ActivityMotion : NSObject {
                             if activity.automotive == true {
                                 UserSession.shared.setTrackingMinInterval(interval: RemoteConfigHelper.shared.defaultTrackingMinVehicleInterval)
                                 self.loggingNotification(message: "Activity Motion : \(formatingDate) | Automative || Min : \(RemoteConfigHelper.shared.defaultTrackingMinVehicleInterval)")
-                            }else if activity.running == true {
+                            } else if activity.cycling == true {
+                                UserSession.shared.setTrackingMinInterval(interval: RemoteConfigHelper.shared.defaultTrackingMinCyclingInterval)
+                                self.loggingNotification(message: "Activity Motion : \(formatingDate) | Cycling || Min : \(RemoteConfigHelper.shared.defaultTrackingMinCyclingInterval)")
+                            } else if activity.running == true {
                                 UserSession.shared.setTrackingMinInterval(interval: RemoteConfigHelper.shared.defaultTrackingMinRunningInterval)
                                 self.loggingNotification(message: "Activity Motion : \(formatingDate) | Running || Min : \(RemoteConfigHelper.shared.defaultTrackingMinRunningInterval)")
-                            }else if activity.walking == true {
+                            } else if activity.walking == true {
                                 UserSession.shared.setTrackingMinInterval(interval: RemoteConfigHelper.shared.defaultTrackingMinWalkingInterval)
                                 self.loggingNotification(message: "Activity Motion : \(formatingDate) | Walking || Min : \(RemoteConfigHelper.shared.defaultTrackingMinWalkingInterval)")
-                            }else if activity.stationary == true {
+                            } else if activity.stationary == true {
                                 UserSession.shared.setTrackingMinInterval(interval: RemoteConfigHelper.shared.defaultTrackingMinInterval)
                                 self.loggingNotification(message: "Activity Motion : \(formatingDate) | Stationary || Min : \(RemoteConfigHelper.shared.defaultTrackingMinInterval)")
                             }

@@ -29,12 +29,7 @@ extension MainPresenter: MainPresenterProtocol {
     
     func notifyViewDidLoad() {
         self.interactor?.addLocationObserver()
-        self.interactor?.fetchLocation()
         self.interactor?.fetchHistoryActivity()
-    }
-    
-    func notifyViewDidAppear() {
-        self.interactor?.fetchLocation()
     }
     
     func selfFetchActivity() {
@@ -45,8 +40,10 @@ extension MainPresenter: MainPresenterProtocol {
         self.view?.displayActivityFetch(activity: activity)
     }
     
-    func notifyLocationFetched(location: Location) {
-        self.view?.displayLocationView(location: location)
+    func notifyLocationFetched() {
+        LocationHelper.shared.geoUpdate(locale: Locale.init(identifier: "th")) { (streetName) in
+            self.view?.displayLocationView(location: streetName)
+        }
     }
     
     func notifyDisplayGPSSpeed(speed: Double) {
